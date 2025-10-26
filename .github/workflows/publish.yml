@@ -35,10 +35,7 @@ jobs:
             - name: Run tests
               run: pnpm run test
 
-            - name: Create or Publish Release
-              uses: changesets/action@v1
-              with:
-                  publish: pnpm run release
+            - name: Publish to NPM
+              run: pnpm run release
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
