@@ -1,6 +1,6 @@
 {
   "name": "@carnil/config",
-  "version": "1.0.5",
+  "version": "1.0.4",
   "description": "Shared tooling configuration for Carnil SDK packages",
   "main": "configs/index.js",
   "files": [
@@ -22,9 +22,9 @@
     "build": "echo 'Config package - no build needed'",
     "test": "echo 'Config package - no tests needed'",
     "release": "npm publish",
-    "version:patch": "npm version patch",
-    "version:minor": "npm version minor",
-    "version:major": "npm version major",
+    "version:patch": "npm version patch --no-git-tag-version",
+    "version:minor": "npm version minor --no-git-tag-version",
+    "version:major": "npm version major --no-git-tag-version",
     "prepublishOnly": "npm test"
   },
   "publishConfig": {
