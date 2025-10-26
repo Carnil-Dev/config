@@ -1,0 +1,19 @@
+{
+  "name": "@carnil/config",
+  "version": "1.0.0",
+  "description": "Shared tooling configuration for Carnil SDK packages",
+  "main": "configs/index.js",
+  "files": ["configs"],
+  "exports": {
+    "./eslint": "./configs/eslint.js",
+    "./typescript": "./configs/tsconfig.base.json",
+    "./prettier": "./configs/prettier.json",
+    "./vitest": "./configs/vitest.config.ts",
+    "./tsup": "./configs/tsup.config.ts"
+  },
+  "keywords": ["carnil", "config"],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}
