@@ -26,7 +26,7 @@ npm install @carnil/config --save-dev
 
 ```javascript
 // eslint.config.js
-import carnilEslint from '@carnil/config/eslint';
+import carnilEslint from "@carnil/config/eslint";
 
 export default carnilEslint;
 ```
@@ -58,15 +58,15 @@ export default carnilEslint;
 
 ```typescript
 // vitest.config.ts
-import { defineConfig } from 'vitest/config';
-import carnilVitest from '@carnil/config/vitest';
+import { defineConfig } from "vitest/config";
+import carnilVitest from "@carnil/config/vitest";
 
 export default defineConfig({
   ...carnilVitest,
   test: {
     ...carnilVitest.test,
     // Your custom test configuration
-  }
+  },
 });
 ```
 
@@ -74,12 +74,12 @@ export default defineConfig({
 
 ```typescript
 // tsup.config.ts
-import { defineConfig } from 'tsup';
-import carnilTsup from '@carnil/config/tsup';
+import { defineConfig } from "tsup";
+import carnilTsup from "@carnil/config/tsup";
 
 export default defineConfig({
   ...carnilTsup,
-  entry: ['src/index.ts'],
+  entry: ["src/index.ts"],
   // Your custom build configuration
 });
 ```
@@ -89,6 +89,7 @@ export default defineConfig({
 ### ESLint (`@carnil/config/eslint`)
 
 Provides ESLint configuration optimized for:
+
 - TypeScript projects
 - React components
 - Modern JavaScript features
@@ -98,6 +99,7 @@ Provides ESLint configuration optimized for:
 ### TypeScript (`@carnil/config/typescript`)
 
 Base TypeScript configuration with:
+
 - Strict type checking
 - Modern ES features
 - Module resolution
@@ -106,6 +108,7 @@ Base TypeScript configuration with:
 ### Prettier (`@carnil/config/prettier`)
 
 Code formatting rules:
+
 - 2-space indentation
 - Single quotes
 - Trailing commas
@@ -115,6 +118,7 @@ Code formatting rules:
 ### Vitest (`@carnil/config/vitest`)
 
 Testing configuration:
+
 - TypeScript support
 - Coverage reporting
 - Test environment setup
@@ -123,6 +127,7 @@ Testing configuration:
 ### TSUP (`@carnil/config/tsup`)
 
 Build configuration:
+
 - ESM and CommonJS output
 - TypeScript compilation
 - Source maps
@@ -180,16 +185,16 @@ You can extend or override any configuration:
 
 ```typescript
 // Custom ESLint config
-import carnilEslint from '@carnil/config/eslint';
+import carnilEslint from "@carnil/config/eslint";
 
 export default [
   ...carnilEslint,
   {
     rules: {
       // Your custom rules
-      '@typescript-eslint/no-unused-vars': 'error'
-    }
-  }
+      "@typescript-eslint/no-unused-vars": "error",
+    },
+  },
 ];
 ```
 
