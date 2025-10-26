@@ -30,52 +30,52 @@ jobs:
                   git config --local user.email "action@github.com"
                   git config --local user.name "GitHub Action"
 
-            # Bump patch version
+            # Bump patch version (skip if this is already a version bump commit)
             - name: Bump version
               run: |
-                  npm version patch --no-git-tag-version
-                  NEW_VERSION=$(node -p "require('./package.json').version")
-                  echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-                  echo "Bumped version to $NEW_VERSION"
+                  # Check if this is already a version bump commit
+                  if [[ "${{ github.event.head_commit.message }}" =~ "chore: bump version" ]]; then
+                      echo "Skipping version bump - this is already a version bump commit"
+                      NEW_VERSION=$(node -p "require('./package.json').version")
+                      echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+                  else
+                      npm version patch --no-git-tag-version
+                      NEW_VERSION=$(node -p "require('./package.json').version")
+                      echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+                      echo "Bumped version to $NEW_VERSION"
+                  fi
 
-            # Commit and push version bump
+            # Commit and push version bump (only if version changed)
             - name: Commit version bump
               run: |
-                  NEW_VERSION=$(node -p "require('./package.json').version")
-                  git add package.json package-lock.json
-                  git commit -m "chore: bump version to $NEW_VERSION"
-                  git push
+                  # Check if there are changes to commit
+                  if git diff --quiet package.json package-lock.json; then
+                      echo "No version changes to commit"
+                  else
+                      NEW_VERSION=$(node -p "require('./package.json').version")
+                      git add package.json package-lock.json
+                      git commit -m "chore: bump version to $NEW_VERSION"
+                      git push
+                      echo "Committed version bump to $NEW_VERSION"
+                  fi
 
-    publish-npm:
-        needs: build-and-publish
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v5
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: 20
-                  registry-url: https://registry.npmjs.org/
-            - run: npm ci
-            - run: echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}" > .npmrc
-            - run: npm publish
+            # Publish to npm
+            - name: Publish to npm
+              run: |
+                  if [ -n "${{ secrets.NPM_TOKEN }}" ]; then
+                      echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}" > .npmrc
+                      npm publish
+                  else
+                      echo "NPM_TOKEN not set, skipping npm publish"
+                  fi
               env:
                   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
-    publish-gpr:
-        needs: build-and-publish
-        runs-on: ubuntu-latest
-        permissions:
-            packages: write
-            contents: read
-        steps:
-            - uses: actions/checkout@v5
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: 20
-                  registry-url: https://npm.pkg.github.com/
-            - run: npm ci
-            - run: echo "@carnil:registry=https://npm.pkg.github.com" > .npmrc
-            - run: echo "//npm.pkg.github.com/:_authToken=${{secrets.GITHUB_TOKEN}}" >> .npmrc
-            - run: npm publish
+            # Publish to GitHub Packages
+            - name: Publish to GitHub Packages
+              run: |
+                  echo "@carnil:registry=https://npm.pkg.github.com" > .npmrc
+                  echo "//npm.pkg.github.com/:_authToken=${{secrets.GITHUB_TOKEN}}" >> .npmrc
+                  npm publish
               env:
                   NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
