@@ -13,6 +13,9 @@
   },
   "keywords": ["carnil", "config"],
   "license": "MIT",
+  "scripts": {
+    "test": "echo 'Config package - no tests needed'"
+  },
   "publishConfig": {
     "access": "public"
   }
