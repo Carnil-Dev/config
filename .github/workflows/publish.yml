@@ -1,28 +1,53 @@
-# This workflow will run tests using node and then publish a package to both npm and GitHub Packages when a release is created
+# This workflow will automatically bump version and publish package to both npm and GitHub Packages on every push to main
 # For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
 
-name: Publish Package
+name: Auto Publish Package
 
 on:
     push:
         branches:
             - main
-        tags:
-            - "v*" # push tags like v1.2.3
 
 jobs:
-    build:
+    build-and-publish:
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            packages: write
         steps:
             - uses: actions/checkout@v5
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
             - uses: actions/setup-node@v4
               with:
                   node-version: 20
             - run: npm ci
             - run: npm test
 
+            # Configure git
+            - name: Configure Git
+              run: |
+                  git config --local user.email "action@github.com"
+                  git config --local user.name "GitHub Action"
+
+            # Bump patch version
+            - name: Bump version
+              run: |
+                  npm version patch --no-git-tag-version
+                  NEW_VERSION=$(node -p "require('./package.json').version")
+                  echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+                  echo "Bumped version to $NEW_VERSION"
+
+            # Commit and push version bump
+            - name: Commit version bump
+              run: |
+                  NEW_VERSION=$(node -p "require('./package.json').version")
+                  git add package.json package-lock.json
+                  git commit -m "chore: bump version to $NEW_VERSION"
+                  git push
+
     publish-npm:
-        needs: build
+        needs: build-and-publish
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v5
@@ -37,7 +62,7 @@ jobs:
                   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
     publish-gpr:
-        needs: build
+        needs: build-and-publish
         runs-on: ubuntu-latest
         permissions:
             packages: write

@@ -198,6 +198,29 @@ export default [
 ];
 ```
 
+## Version Management
+
+This package uses **automatic version bumping** on every push to the main branch:
+
+- **Patch version** (1.0.2 → 1.0.3) is automatically incremented on each commit
+- The version bump is committed back to the repository
+- Package is automatically published to both npm and GitHub Packages
+
+### Manual Version Control
+
+For major or minor version bumps, use these commands:
+
+```bash
+# Patch version (automatic on push)
+npm run version:patch
+
+# Minor version (new features)
+npm run version:minor
+
+# Major version (breaking changes)
+npm run version:major
+```
+
 ## Contributing
 
 When contributing to this package:
@@ -206,6 +229,7 @@ When contributing to this package:
 2. Ensure backward compatibility
 3. Update documentation for new features
 4. Follow semantic versioning
+5. **No need to manually bump versions** - it's automatic!
 
 ## License
 
