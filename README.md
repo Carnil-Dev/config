@@ -65,7 +65,7 @@ export default defineConfig({
   ...carnilVitest,
   test: {
     ...carnilVitest.test,
-    // Your custom test configuration
+    // Your custom test config
   },
 });
 ```
