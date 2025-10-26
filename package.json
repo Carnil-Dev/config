@@ -1,6 +1,6 @@
 {
   "name": "@carnil/config",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Shared tooling configuration for Carnil SDK packages",
   "main": "configs/index.js",
   "files": [
